@@ -1,0 +1,7 @@
+Version 0.1 of SimLang
+
+Pleade handle with care :)
+
+`docu.txt`   - SimLang documentation.
+`docu.py`    - SimLang python extensions.
+`packed.txt` - SimLang packaged functions.

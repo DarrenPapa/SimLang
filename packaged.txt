@@ -1,0 +1,20 @@
+If you are really insterested in paclaged functions.
+Here you go.
+
+Example use of packaged functions.
+== Test.sl.txt
+pack test, name // Packaged functions work like separate scripts
+  println %name
+end:pack:test
+
+pack:test "Name Here" // They are called similarly to functions but
+// with the "pack:" prefix.
+== end of Test.sl.txt
+
+They can be imported into scripts!
+You can use `run_file "script_here.sl.txt"` to import them.
+
+ANY DATA LOSS IS NOT OUR RESPONSIBILITY, YOU WERE WARNED THAT PACKAGED
+FUNCTIONS ARE NOT SAFELY IMPLEMENTED YET.
+
+                                            -- A SimLang Dev
