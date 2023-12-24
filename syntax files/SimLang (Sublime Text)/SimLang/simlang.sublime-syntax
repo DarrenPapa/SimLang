@@ -1,0 +1,47 @@
+%YAML 1.2
+---
+file_extensions:
+  - sl.txt
+scope: source.simlang
+contexts:
+  main:
+    - match: '"'
+      scope: punctuation.definition.string.begin.simlang
+      push:
+        - double_quoted_string
+
+    - match: '//'
+      scope: punctuation.definition.comment.simlang
+      push: line_comment
+
+    - match: '\b(call|to_int|to_str|to_flt|dec|inc|exit|pack|end\:pack\:[^\s]+|include|include_std|set|set_global|get_global|rename|rename_global|delete|delete_global|println|print|input|read_file|write_file|append_file|isfile|isdir|makedir|rmdir|rmfile|add|sub|mul|div|fdiv|pow|mod|ifeq|ifne|ifgt|iflt|glabel|label|goto|giz|gnz|glz|ggz|pfunc|func_default_value|func|end\:func\:[^\s]+|return|list_new|list_append|list_pop|list_insert|list_get|list_reverse|list_init|end\:list\:[^\s]+|dictionary_new|dictionary_add_item|strict_dictionary_add_item|dictionary_pop_item|dictionary_get_item|random_choice|random_int|join|split|length|copy|sys_console)\b'
+      scope: keyword.control.simlang
+
+    # Numbers
+    - match: '\b(-)?[0-9.]+\b'
+      scope: constant.numeric.simlang
+
+    - match: '\%\w+'
+      scope: constant.numeric.simlang
+
+    - match: '.true|.false'
+      scope: constant.language.bool.simlang
+
+    - match: '.ignore|.none'
+      scope: constant.language.none.simlang
+
+  double_quoted_string:
+    - meta_scope: string.quoted.double.simlang
+    - match: '\\,'
+      scope: constant.character.escape.simlang
+    - match: ","
+      scope: punctuation.definition.string.end.simlang
+      pop: true
+    - match: '"'
+      scope: punctuation.definition.string.end.simlang
+      pop: true
+
+  line_comment:
+    - meta_scope: comment.line.example-c
+    - match: $
+      pop: true
