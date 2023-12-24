@@ -36,7 +36,6 @@ def read(tree, path):
     else:
         return tree[fpath[0]] if fpath[0] in tree else 0
 
-
 class data_node:
     def __init__(self, depth=None):
         self._depth = depth or 0
@@ -60,11 +59,9 @@ class data_node:
     def __repr__(self):
         return f"<data_node(depth={self._depth})>"
 
-
 def getfilename(path):
     name = os.path.basename(path).split(".")[::-1][-1]
     return name
-
 
 def compress(items):
     l = tuple()
@@ -354,6 +351,12 @@ class inter_class:
                 return str(arg)
         return tuple(args)
 
+    def unimplemented(self,instruction):
+        self.err(f"[Unimplemented Error]: The instruction you are using ({instruction}) is unimplemented.\nThis instruction might be added in the future.")
+
+    def unstable(self,instruction):
+        self.err(f"[UNSTABLE ERROR]: THE INSTRUCTION YOU ARE USING ({instruction}) IS UNSTABLE AND MIGHT DAMAGE YOUR DEVICE.\nPLEASE BE AWARE THAT THIS INSTRUCTION IS STILL IN DEVELOPMENT.\nTHIS INSTRUCTION MIGHT BE DEPRECATED IF NECESSARY.")
+
     def run(self, code, manual=False, pref="main"):
         comment = "//"
         prog = [
@@ -435,8 +438,11 @@ MAX_SCRIPT_CALLS: {MAX_SCRIPT_CALLS}"""
             ## Variables
             elif ins == "set" and argc == 2:
                 if not args[0].isidentifier():
-                    self.err("[Error]: Invalid name: " + args[0])
+                    self.err(f"[Error]: Invalid name `{args[0]}`")
                 self._vars[args[0]] = args[1]
+            elif ins == "to_const" and argc == 1:
+                if not args[0].isidentifier():
+                    self.err(f"[Error]: Invalid name `{args[0]}`")
             elif ins == "get_global" and argc == 1:
                 if (not args[0].isidentifier()) or (args[0] not in self._global):
                     self.err("[Error]: Invalid name: " + args[0])
@@ -733,16 +739,19 @@ MAX_SCRIPT_CALLS: {MAX_SCRIPT_CALLS}"""
                 )
             ## Packaged function
             elif ins == "ppack" and argc == 1:
+                self.unstable(ins)
                 if not args[0].isidentifier():
                     self.err("[Error]: Invalid name: " + args[0])
                 self._func[args[0]] = ("partial:func", None, {})
             elif ins == "pack_default_value" and argc == 3:
+                self.unstable(ins)
                 if (not args[0].isidentifier()) or args[0] not in self._func:
                     self.err(f"[Error]: Invalid name `{args[0]}`.\nplease prototype the package `{args[0]}` before using the `pack_default_value` instruction.")
                 if not args[1].isidentifier():
                     self.err("[Error]: Invalid name: " + args[1])
                 self._func[args[0]][2][args[1]] = args[2]
             elif ins == "pack" and argc > 0:
+                self.unstable(ins)
                 if not args[0].isidentifier():
                     self.err("[Error]: Invalid name: " + args[0])
                 oldp = self.p
@@ -764,6 +773,7 @@ MAX_SCRIPT_CALLS: {MAX_SCRIPT_CALLS}"""
                     vals[0], vals[1] = ("\n".join(code[1:]), (*args[1:],))
                     self._func[args[0]] = tuple(vals)
             elif ins == "callp" and argc > 0:
+                self.unstable(ins)
                 if (not args[0].isidentifier()) or args[0] not in self._func:
                     self.err("[Error]: Invalid name: " + args[0])
                 code, arg_name, defs = self._func[args[0]]
@@ -783,6 +793,7 @@ MAX_SCRIPT_CALLS: {MAX_SCRIPT_CALLS}"""
                 self.p = self.lines.pop()+1
                 self.lines.append(self.p)
             elif ins.startswith('pack:') and ins[5:] in self._func and type(self._func.get(ins[5:], None)) == tuple:
+                self.unstable(ins)
                 ins = ins[5:]
                 code, arg_name, defs = self._func[ins]
                 if code == "partial:func":
@@ -794,11 +805,12 @@ MAX_SCRIPT_CALLS: {MAX_SCRIPT_CALLS}"""
                     if val == ".ignore:arg":
                         continue
                     self._vars[name] = val
+                self._files.append(f"{self._files[-1]}:{ins}")
                 self._vars["_name"] = ins
                 self.run(code)
                 self.pop_scope()
                 self._files.pop()
-                self.p = self.lines.pop()+1
+                self.p = self.lines.pop()
                 self.lines.append(self.p)
             ## Type casting
             elif ins == "to_int" and argc == 1:
