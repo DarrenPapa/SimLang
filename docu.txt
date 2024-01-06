@@ -1,6 +1,7 @@
 // SimLang - The most simplest yet confusing programming language
+// Official 0.1 release!
 
-// Note: Dictionaries are the only mutable data type (pass-by-value)
+// Note: Dictionaries are the only mutable data type (pass-by-value),
 // This is to ensure that SimLang is a slightly functional programming language.
 
 // SimLang can be extended using python scripts.
@@ -15,6 +16,9 @@
 
     include "local_file.py", ...
     include_std "global_file_for_every_script_in_libs_dir.py", ...
+    
+    // Accessing included instructions can be accessed using
+    // `extension_name.instruction_name`
 
 // Arguments
 
@@ -170,8 +174,8 @@
     join "\,", %list
     split string, "\,", result
     length string, result      // Can be used for dicts and lists
-    copy scource, result       // Can be used for other data types as well...
-    // this doesnt produce a shallow copy but a literal copy for dicts
+    copy source, result       // Can be used for other data types as well...
+    // ...this doesnt produce a shallow copy but a literal copy for dicts
 
 // Console access
 
