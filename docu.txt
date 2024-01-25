@@ -1,0 +1,182 @@
+// SimLang - The most simplest yet confusing programming language
+// Official 0.1 release!
+
+// Note: Dictionaries are the only mutable data type (pass-by-value),
+// This is to ensure that SimLang is a slightly functional programming language.
+
+// SimLang can be extended using python scripts.
+// The documentation is in a separate file.
+// SimLangs Lib Dirs (extensions that can be accessed by any SimLang script):
+//   "~/simlang_libs/" in Linux and in MacOS
+//   "%APPDATA%/simlang_libs/" in Windows
+// When including files that is in the libs directory use `include_std`
+// Python extension files that is in the local directory are included using `include`
+
+// Inclusion of python extensions
+
+    include "local_file.py", ...
+    include_std "global_file_for_every_script_in_libs_dir.py", ...
+    
+    // Accessing included instructions can be accessed using
+    // `extension_name.instruction_name`
+
+// Arguments
+
+    // %var                    // the value of the variable var
+    // var                     // the identifier var (string by default)
+    // "String :)"             // String (when using commas `,` in a string it must
+      // be escaped with  a back slash `\`)
+    // ."Value of var: .[var]" // Interpolated string
+    // 90                      // Integer
+    // 90.9                    // Float
+    // %dictionary->key        // Field fetching (can be used in nested dictionaries)
+    // var?                    // 1 if var is in local scope else 0
+    // var??                   // 1 if var is in global scope else 0
+    // var.int?                // 1 if var is int else 0 (local scope)
+    // var.flt?                // 1 if var is float else 0 (local scope)
+    // var.str?                // 1 if var is string else 0 (local scope)
+    // var.dict?               // 1 if var is dict else 0 (local scope)
+    // var.list?               // 1 if var is list else 0 (local scope)
+    // var.int??               // 1 if var is int else 0 (global scope)
+    // var.flt??               // 1 if var is float else 0 (global scope)
+    // var.str??               // 1 if var is string else 0 (global scope)
+    // var.dict??              // 1 if var is dict else 0 (global scope)
+    // var.list??              // 1 if var is list else 0 (global scope)
+    // .true                   // always 1
+    // .false                  // always 0
+    // .none                   // always 0
+    // .ignore                 // for funtions with default values, it ignores the
+      // current argument and uses the default instead. Its actual value as a
+      // literal is the string ".ignore:arg" this is only implemented for functions
+
+// Variables
+
+    set name, value
+    set_global name, value
+    get_global name
+    delete name
+    delete_global name
+    rename name, new_name
+    rename_global name, new_name
+
+// Text IO
+
+    // printing stuff
+    println "Hello\, world!"
+    
+    // Input
+    print "Prompt: "
+    input var
+
+// File IO
+
+    // Writing to files
+    write_file "test.txt", "Hello :)"
+
+    // Reading from files
+    read_file "test.txt", var
+
+    // Append to files
+    append_file "test.txt", "Hello :)"
+
+// File operations
+
+    isfile "test.txt", result // 1 if os.path.isfile("test.txt") else 0
+    isdir "./example/dir/"    // 1 if os.path.isdir("./example/dir/") else 0
+    makedir "./test/dir/"     // os.makedirs("./test/dir/",exist_ok=True)
+    rmdir "./test/"           // shutil.rmtree("./test/")
+    rmfile "test.txt"         // os.remove("test.txt")
+
+// Arithmetic operations
+
+    add 9, 9, result
+    sub 9, 9, result
+    mul 9, 9, result
+    div 9, 9, result
+    fdiv 9, 9, result
+    pow 9, 9, result
+    mod 9, 9, result
+
+// Condition checking
+
+    ifeq 9, 9, result  // true
+    ifne 10, 9, result // true
+    iflt 9, 10, result // true
+    ifgt 10, 9, result // true
+
+// Branching
+
+    glabel name     // Preruntime defined
+    label name      // Runtime defined
+    goto name
+    giz name, value // Goto if zero
+    gnz name, value // Goto if not zero
+    glz name, value // Goto if less than zero
+    ggz name, value // Goto if greater than zero
+
+// Functions
+
+    // Packeged functions are implemented
+    // But they are still unstable and buggy.
+    // What I mean is its made of hacky code to make it barely work.
+    // Full documentation will be added when they are
+    // fully implemented in a safe way. If you are stubborn look at `packaged.txt`
+
+    // Function prototyping
+    pfunc test
+    
+    // Setting default values
+    // Note the function must be first prototyped to use this
+    func_default_value test, name, value
+
+    // Functions
+    func greet, name
+        println ."Hello .[name]!"
+        return
+    end:func:greet
+    
+    return // pulls the given variables to the global scope
+    // it doesnt return value like other functions this is to simplify parsing
+
+// Lists
+
+    list_new test             // Empty list
+    list_append test, 90
+    list_pop test, result
+    list_insert test, 10, "Assigning to a specific index (0)"
+    list_get test, 10, result // getting a specific index
+    list_reverse test
+    list_init test            // A list that has items
+        "string1"
+        "string2"
+        "string3"
+        99
+        100
+    end:list:test
+
+// Dictionaries
+
+    dictionary_new test
+    dictionary_add_item test, name, "Darren" // When a dictionary is passed as the
+    // the value it gets copied (this is to prevent cyclic references)
+    dictionary_get_item test, name, result
+    dictionary_pop_item test, name
+    strict_dictionary_add_item test, name, value // doesn't make a copy of...
+    // ...value when its a dict
+
+// Random
+
+    random_choice %list, result // Can be used for iterables (str,list,dict types)
+    random_int 0, 10, result
+
+// Strings
+
+    join "\,", %list
+    split string, "\,", result
+    length string, result      // Can be used for dicts and lists
+    copy source, result       // Can be used for other data types as well...
+    // ...this doesnt produce a shallow copy but a literal copy for dicts
+
+// Console access
+
+    sys_console "echo "hello world!"" // yes strings can have nested double qoutes

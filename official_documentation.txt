@@ -1,0 +1,125 @@
+The Official SimLang Manual for the Official Version 0.1
+
+  SimLang is meant to be simple yet consice in a way.
+It has been influenced by Python for its consice manner and Lua
+for its compactness (the interpreter code). The first documentation
+states that "SimLang is the most simplest yet confusing programming language"
+So I apologize in advance if some features are very hard to follow.
+Oh and in here, explicit is better than implicit, yes that is from
+the "Zen of Python" from the `this` module.
+
+DISCLAIMER FOR BEGINNERS IN PROGRAMMING:
+    If you are a beginner in the programming world, I advice you to switch
+  to a more practical programming language perhaps C or Python.
+  For more direct information:
+    Web Development: Python
+    Game Development: C# / C++ / Python (though not encouraged)
+    Embedded Programming: C / Assembly
+    Machine Learning: Python
+    Math Stuff: Python / MATLAB / R / Julia
+  Now if you are stubborn, go ahead, get your hands dirty.
+  I am warning you, this programming language is unconventional.
+
+Good luck learners :)
+
+Sections:
+  Types
+  Constants
+  Variable Operations
+  Variables
+  Text I/O
+  File I/O
+  File Operations
+  Arithmetic Operations
+  Gotos
+  Functions
+  Dictionaries
+  Lists
+  Randomizers
+  Console Access
+  Manual Scope Controls
+  Errors
+
+Types:
+```
+set string, "Hello\, world!" // Commas need to be escaped for any kind of string
+set identifier_string, Valid_identifier
+set istring, ."Value of `string`: .[string]"
+set integer, 90
+set float, 70.8
+
+// Immutable pass-by-value
+list_new mylist
+list_append mylist, 90
+list_assign mylist, 0, 50
+list_reverse mylist
+list_pop mylist, var
+println %var
+prinrln %mylist
+list_make mylist 
+
+// Mutable pass-by-value
+dictionary_new mydict
+dictionary_add_item mydict, name, "Hubert"
+dictionary_get_item mydict, name, name
+```
+
+
+Constants:
+```
+set true, .true     // literal value is one
+set false, .false   // literal value is zero
+set none, .none     // literal value is zero
+set ignore, .ignore // literal value is the string `.ignore:arg`
+// `.ignore` is used for skipping an argument on a function that has default values
+```
+
+
+Variable Operations:
+This can only be done in the argument space. Meaning you can only do this when
+you are passing it as an argument to an instruction.
+Type Checking
+```
+// Local scope
+set is_int, var.int?
+set is_str, var.str?
+set is_flt, var.flt?
+set is_dict, var.dict?
+set is_list, var.list?
+
+// Global scope
+set is_int, var.int??
+set is_str, var.str??
+set is_flt, var.flt??
+set is_dict, var.dict??
+set is_list, var.list??
+```
+Checking if a variable exists
+```
+// Local scope
+set exists, var?
+
+// Global scope
+set exists, var??
+```
+Getting values
+```
+// Local scope
+println %var
+println local%var
+
+// Global scope (`get_global` is recommended instead)
+println global%var
+
+// The interpreter will raise an invalid argument error if the variable doesnt exist
+```
+
+
+Variables:
+There are multiple variable operations but first how to assign them?
+Its not the typical way.
+Like this!
+```
+set name, value
+```
+If you are in the global scope, assigned variables are global automatically.
